@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enum Role Pengguna
+enum Role {
+  OWNER
+  KASIR
+}
+
+// Enum Kategori Menu
+enum MenuCategory {
+  MAKANAN
+  MINUMAN
+}
+
+// Enum Status Pembayaran
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+// Enum Status Pesanan (Belum Diantar / Selesai Diantar)
+enum OrderStatus {
+  PENDING     // Belum diantar ke meja (Dalam proses)
+  COMPLETED   // Selesai diantar ke meja
+  CANCELLED   // Dibatalkan
+}
+
+// 1. Tabel Warung
+model Store {
+  id        String     @id @default(uuid())
+  name      String
+  slug      String     @unique
+  tables    Table[]
+  menus     MenuItem[]
+  orders    Order[]
+  users     User[]
+  createdAt DateTime   @default(now())
+}
+
+// 2. Tabel Pengguna (Owner & Kasir)
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  name      String
+  role      Role     @default(KASIR)
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// 3. Tabel Meja
+model Table {
+  id          String @id @default(uuid())
+  tableNumber String
+  storeId     String
+  store       Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, tableNumber])
+}
+
+// 4. Tabel Menu Makanan/Minuman
+model MenuItem {
+  id          String       @id @default(uuid())
+  name        String
+  price       Decimal
+  category    MenuCategory @default(MAKANAN)
+  isAvailable Boolean      @default(true)
+  storeId     String
+  store       Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
+
+  @@index([storeId, category])
+}
+
+// 5. Tabel Pesanan
+model Order {
+  id            String        @id @default(uuid())
+  tableNumber   String
+  totalAmount   Decimal
+  paymentStatus PaymentStatus @default(PENDING)
+  orderStatus   OrderStatus   @default(PENDING)
+  storeId       String
+  store         Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orderItems    OrderItem[]
+  createdAt     DateTime      @default(now())
+
+  @@index([storeId, paymentStatus, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+}
+
+// 6. Tabel Detail Item Pesanan
+model OrderItem {
+  id         String    @id @default(uuid())
+  orderId    String
+  menuItemId String?
+  menuName   String
+  price      Decimal
+  quantity   Int
+  notes      String?
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem   MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: SetNull)
+}
