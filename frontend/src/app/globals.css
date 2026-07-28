@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #FAF8F4;
+    color: #1C1008;
+    font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::selection {
+    background-color: #C4622A;
+    color: #FAF8F4;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F0EBE3;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #C8A882;
+    border-radius: 3px;
+  }
+}
+
+/* ─── Color Variables ────────────────────────────────────────────
+   Palet: Warm Earthy — seperti warung makan rumahan yang nyaman
+   - Cream:       #FAF8F4   (background utama)
+   - Parchment:   #F0EBE3   (background section)
+   - Warm Sand:   #D4C5AA   (border, divider)
+   - Caramel:     #C8A882   (subtle text, icon)
+   - Terracotta:  #C4622A   (brand primary — warna bata hangat)
+   - Sienna:      #8B3E1C   (hover, emphasis)
+   - Espresso:    #2D1A0A   (heading gelap)
+   - Ink:         #1C1008   (body text)
+   ───────────────────────────────────────────────────────────── */
+
+/* ─── Card Biasa ─────────────────────────────────────────────── */
+.card {
+  background-color: #FFFFFF;
+  border: 1px solid #E8E0D4;
+  border-radius: 12px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 4px 20px rgba(44, 26, 10, 0.08);
+  transform: translateY(-1px);
+}
+
+/* ─── Tombol Utama ──────────────────────────────────────────── */
+.btn-primary {
+  background-color: #C4622A;
+  color: #FAF8F4;
+  border-radius: 8px;
+  font-family: var(--font-jakarta), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.btn-primary:hover {
+  background-color: #8B3E1C;
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ─── Tombol Sekunder ───────────────────────────────────────── */
+.btn-secondary {
+  background-color: transparent;
+  color: #C4622A;
+  border: 1.5px solid #C4622A;
+  border-radius: 8px;
+  font-family: var(--font-jakarta), sans-serif;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.btn-secondary:hover {
+  background-color: #C4622A;
+  color: #FAF8F4;
+}
+
+/* ─── Teks Aksen / Brand ────────────────────────────────────── */
+.text-brand {
+  color: #C4622A;
+}
+.text-muted {
+  color: #9A8570;
+}
+
+/* ─── Header Sticky ─────────────────────────────────────────── */
+.header-sticky {
+  background-color: rgba(250, 248, 244, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #E8E0D4;
+}
+
+/* ─── Badge Meja ────────────────────────────────────────────── */
+.badge-table {
+  background-color: #FDF4ED;
+  border: 1px solid #E8CDB0;
+  color: #8B3E1C;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 4px 14px;
+}
+
+/* ─── Menu Item Card ────────────────────────────────────────── */
+.menu-card {
+  background-color: #FFFFFF;
+  border: 1px solid #EDE5D8;
+  border-radius: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.menu-card:hover {
+  border-color: #C4622A;
+  box-shadow: 0 2px 12px rgba(196, 98, 42, 0.1);
+}
+
+/* ─── Keranjang / Cart Panel ────────────────────────────────── */
+.cart-panel {
+  background-color: #FFFFFF;
+  border-top: 2px solid #EDE5D8;
+  box-shadow: 0 -4px 24px rgba(44, 26, 10, 0.10);
+}
+
+/* ─── Modal ─────────────────────────────────────────────────── */
+.modal-overlay {
+  background-color: rgba(28, 16, 8, 0.55);
+  backdrop-filter: blur(4px);
+}
+.modal-card {
+  background-color: #FAF8F4;
+  border-radius: 16px;
+  border: 1px solid #E8E0D4;
+}
+
+/* ─── Input Field ───────────────────────────────────────────── */
+.input-field {
+  background-color: #F6F1EB;
+  border: 1px solid #DDD3C4;
+  border-radius: 7px;
+  color: #1C1008;
+  transition: border-color 0.2s ease;
+}
+.input-field:focus {
+  outline: none;
+  border-color: #C4622A;
+}
+.input-field::placeholder {
+  color: #B8A898;
+}
+
+/* ─── Divider ───────────────────────────────────────────────── */
+.divider {
+  border-color: #EDE5D8;
+}
+
+/* ─── Status Badges ─────────────────────────────────────────── */
+.badge-paid {
+  background-color: #EDF7F0;
+  border: 1px solid #A8D9B8;
+  color: #2D7A4F;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-pending {
+  background-color: #FDF6EC;
+  border: 1px solid #E8C98A;
+  color: #8B5E1A;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-done {
+  background-color: #EDF7F0;
+  border: 1px solid #A8D9B8;
+  color: #2D7A4F;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ─── Animasi Minimal ──────────────────────────────────────── */
+.fade-in {
+  animation: fadeIn 0.35s ease forwards;
+}
+.slide-up {
+  animation: slideUp 0.4s ease forwards;
+}
+.scale-in {
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Live Dot Indicator ────────────────────────────────────── */
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #3DA05A;
+  position: relative;
+}
+.live-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background-color: rgba(61, 160, 90, 0.25);
+  animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes ping {
+  0%   { transform: scale(1); opacity: 1; }
+  75%, 100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ─── Shimmer Loading ──────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg, #F0EBE3 25%, #E8E0D4 50%, #F0EBE3 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
