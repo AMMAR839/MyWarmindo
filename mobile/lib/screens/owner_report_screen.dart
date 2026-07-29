@@ -39,10 +39,8 @@ class _OwnerReportScreenState extends State<OwnerReportScreen> {
     final recentOrders = (_analyticsData?['recentOrders'] as List?) ?? [];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
-        title: const Text('📊 Dashboard Pemilik Warmindo'),
-        backgroundColor: const Color(0xFF1E293B),
+        title: const Text('Laporan Bisnis'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -51,13 +49,13 @@ class _OwnerReportScreenState extends State<OwnerReportScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.orange))
+          ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: _loadAnalytics,
-              color: Colors.orange,
+              color: const Color(0xFFC4622A),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -67,91 +65,140 @@ class _OwnerReportScreenState extends State<OwnerReportScreen> {
                         Expanded(
                           child: _buildStatCard(
                             title: 'Omzet Hari Ini',
-                            value: 'Rp ${todayRevenue.toString()}',
+                            value: 'Rp $todayRevenue',
                             subtitle: '$todayOrders pesanan lunas',
                             icon: Icons.payments,
-                            color: Colors.orangeAccent,
+                            bgColor: const Color(0xFFFDF6EC),
+                            borderColor: const Color(0xFFE8C98A),
+                            iconColor: const Color(0xFF8B5E1A),
+                            valueColor: const Color(0xFFC4622A),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: _buildStatCard(
                             title: 'Total Pendapatan',
-                            value: 'Rp ${totalRevenue.toString()}',
+                            value: 'Rp $totalRevenue',
                             subtitle: '$totalOrders total pesanan',
                             icon: Icons.account_balance_wallet,
-                            color: Colors.emeraldAccent,
+                            bgColor: const Color(0xFFEDF7F0),
+                            borderColor: const Color(0xFFA8D9B8),
+                            iconColor: const Color(0xFF2D7A4F),
+                            valueColor: const Color(0xFF2D7A4F),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 32),
 
                     // ─── Top Selling Section ─────────────────────────────
-                    const Text(
-                      '🏆 Menu Terlaris Warmindo',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    const Row(
+                      children: [
+                        Icon(Icons.emoji_events, color: Color(0xFFC4622A), size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'Menu Paling Laris',
+                          style: TextStyle(
+                            color: Color(0xFF2D1A0A),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 16),
                     if (topSelling.isEmpty)
                       const Text(
-                        'Belum ada data menu terlaris.',
-                        style: TextStyle(color: Colors.slate400, fontSize: 13),
+                        'Belum ada data menu terlaris hari ini.',
+                        style: TextStyle(color: Color(0xFF9A8570), fontSize: 14),
                       )
                     else
-                      ...topSelling.map((item) => Card(
-                            color: const Color(0xFF1E293B),
-                            margin: const EdgeInsets.only(bottom: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(color: Colors.orange.withOpacity(0.3)),
-                            ),
-                            child: ListTile(
-                              leading: const CircleAvatar(
-                                backgroundColor: Colors.orange,
-                                child: Text('🍜', style: TextStyle(fontSize: 18)),
-                              ),
-                              title: Text(
-                                item['name'] ?? '',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                      ...topSelling.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final item = entry.value;
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xFFE8E0D4)),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: index == 0 ? const Color(0xFFFDF6EC) : const Color(0xFFF0EBE3),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: index == 0 ? const Color(0xFF8B5E1A) : const Color(0xFF9A8570),
+                                    ),
+                                  ),
                                 ),
                               ),
-                              subtitle: Text(
-                                'Terjual ${item['quantity']} porsi',
-                                style: const TextStyle(color: Colors.slate400, fontSize: 12),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item['name'] ?? '',
+                                      style: const TextStyle(
+                                        color: Color(0xFF2D1A0A),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Terjual ${item['quantity']} porsi',
+                                      style: const TextStyle(color: Color(0xFF9A8570), fontSize: 13),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              trailing: Text(
+                              Text(
                                 'Rp ${item['revenue']}',
                                 style: const TextStyle(
-                                  color: Colors.orangeAccent,
+                                  color: Color(0xFFC4622A),
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 14,
                                 ),
                               ),
-                            ),
-                          )),
+                            ],
+                          ),
+                        );
+                      }),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 32),
 
                     // ─── Recent Transactions ────────────────────────────
-                    const Text(
-                      '🧾 Transaksi Terbaru',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    const Row(
+                      children: [
+                        Icon(Icons.history, color: Color(0xFF9A8570), size: 20),
+                        SizedBox(width: 8),
+                        Text(
+                          'Riwayat Transaksi Terakhir',
+                          style: TextStyle(
+                            color: Color(0xFF2D1A0A),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 16),
                     if (recentOrders.isEmpty)
                       const Text(
                         'Belum ada transaksi lunas.',
-                        style: TextStyle(color: Colors.slate400, fontSize: 13),
+                        style: TextStyle(color: Color(0xFF9A8570), fontSize: 14),
                       )
                     else
                       ListView.builder(
@@ -160,29 +207,59 @@ class _OwnerReportScreenState extends State<OwnerReportScreen> {
                         itemCount: recentOrders.length,
                         itemBuilder: (context, index) {
                           final order = recentOrders[index];
-                          return Card(
-                            color: const Color(0xFF1E293B),
-                            margin: const EdgeInsets.only(bottom: 8),
-                            shape: RoundedRectangleBorder(
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: const Color(0xFFE8E0D4)),
                             ),
-                            child: ListTile(
-                              title: Text(
-                                '${order['tableNumber']} — Rp ${order['totalAmount']}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFEDF7F0),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.check, size: 16, color: Color(0xFF2D7A4F)),
                                 ),
-                              ),
-                              subtitle: Text(
-                                'Status: ${order['orderStatus']}',
-                                style: const TextStyle(color: Colors.slate400, fontSize: 12),
-                              ),
-                              trailing: const Icon(Icons.check_circle, color: Colors.green),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        order['tableNumber'] ?? 'Meja',
+                                        style: const TextStyle(
+                                          color: Color(0xFF2D1A0A),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        order['orderStatus'] == 'COMPLETED' ? 'Selesai' : 'Sedang Dimasak',
+                                        style: const TextStyle(color: Color(0xFF9A8570), fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  'Rp ${order['totalAmount']}',
+                                  style: const TextStyle(
+                                    color: Color(0xFF2D1A0A),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         },
                       ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
@@ -195,45 +272,57 @@ class _OwnerReportScreenState extends State<OwnerReportScreen> {
     required String value,
     required String subtitle,
     required IconData icon,
-    required Color color,
+    required Color bgColor,
+    required Color borderColor,
+    required Color iconColor,
+    required Color valueColor,
   }) {
-    return Card(
-      color: const Color(0xFF1E293B),
-      shape: RoundedRectangleBorder(
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: bgColor,
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: color.withOpacity(0.4)),
+        border: Border.all(color: borderColor),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
                   title,
-                  style: const TextStyle(color: Colors.slate400, fontSize: 12),
+                  style: TextStyle(
+                    color: iconColor.withValues(alpha: 0.8),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                Icon(icon, color: color, size: 20),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.extrabold,
-                color: color,
               ),
+              Icon(icon, color: iconColor, size: 20),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: valueColor,
+              letterSpacing: -0.5,
             ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: const TextStyle(color: Colors.slate400, fontSize: 11),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            style: TextStyle(
+              color: iconColor.withValues(alpha: 0.7),
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

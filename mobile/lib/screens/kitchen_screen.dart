@@ -40,10 +40,12 @@ class _KitchenScreenState extends State<KitchenScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '🔔 PESANAN LUNAS BARU! (${data['order']['tableNumber']})',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              'Pesanan baru masuk dari ${data['order']['tableNumber']}!',
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-            backgroundColor: Colors.emerald,
+            backgroundColor: const Color(0xFF2D7A4F), // Green
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
       }
@@ -66,10 +68,8 @@ class _KitchenScreenState extends State<KitchenScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
-        title: const Text('👨‍🍳 Antrean Dapur & Kasir Live'),
-        backgroundColor: const Color(0xFF1E293B),
+        title: const Text('Antrean Dapur'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -78,12 +78,19 @@ class _KitchenScreenState extends State<KitchenScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.orange))
+          ? const Center(child: CircularProgressIndicator())
           : _orders.isEmpty
               ? const Center(
-                  child: Text(
-                    'Belum Ada Pesanan Lunas 😴',
-                    style: TextStyle(color: Colors.slate400, fontSize: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.receipt_long, size: 64, color: Color(0xFFE8E0D4)),
+                      SizedBox(height: 16),
+                      Text(
+                        'Belum ada pesanan aktif',
+                        style: TextStyle(color: Color(0xFF9A8570), fontSize: 16),
+                      ),
+                    ],
                   ),
                 )
               : ListView.builder(
@@ -94,109 +101,148 @@ class _KitchenScreenState extends State<KitchenScreen> {
                     final isCompleted = order['orderStatus'] == 'COMPLETED';
 
                     return Card(
-                      color: isCompleted
-                          ? const Color(0xFF1E293B).withOpacity(0.5)
-                          : const Color(0xFF1E293B),
+                      elevation: 0,
+                      margin: const EdgeInsets.only(bottom: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                         side: BorderSide(
-                          color: isCompleted ? Colors.transparent : Colors.orangeAccent.withOpacity(0.5),
+                          color: isCompleted ? const Color(0xFFE8E0D4) : const Color(0xFFC4622A).withValues(alpha: 0.3),
+                          width: isCompleted ? 1 : 2,
                         ),
                       ),
-                      margin: const EdgeInsets.only(bottom: 16),
+                      color: isCompleted ? const Color(0xFFF0EBE3) : Colors.white,
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Chip(
-                                  label: Text(
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFDF6EC),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: const Color(0xFFE8C98A)),
+                                  ),
+                                  child: Text(
                                     order['tableNumber'] ?? 'Meja',
                                     style: const TextStyle(
-                                      color: Colors.orange,
-                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF8B5E1A),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13,
                                     ),
                                   ),
-                                  backgroundColor: Colors.orange.withOpacity(0.2),
                                 ),
-                                const Chip(
-                                  label: Text(
-                                    '💳 LUNAS',
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFEDF7F0),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: const Color(0xFFA8D9B8)),
+                                  ),
+                                  child: const Text(
+                                    'LUNAS',
                                     style: TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 10,
+                                      color: Color(0xFF2D7A4F),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 11,
+                                      letterSpacing: 0.5,
                                     ),
                                   ),
-                                  backgroundColor: Colors.greenAccent,
                                 ),
                               ],
                             ),
-                            const Divider(color: Colors.slate700),
+                            const SizedBox(height: 16),
+                            const Divider(color: Color(0xFFE8E0D4), height: 1),
+                            const SizedBox(height: 16),
                             ...?order['orderItems']?.map<Widget>((item) => Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  padding: const EdgeInsets.only(bottom: 12),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            item['menuName'] ?? '',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                          Expanded(
+                                            child: Text(
+                                              item['menuName'] ?? '',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 15,
+                                                color: isCompleted ? const Color(0xFF9A8570) : const Color(0xFF2D1A0A),
+                                              ),
                                             ),
                                           ),
+                                          const SizedBox(width: 8),
                                           Text(
-                                            'x${item['quantity']}',
-                                            style: const TextStyle(
-                                              color: Colors.orange,
-                                              fontWeight: FontWeight.extrabold,
+                                            '×${item['quantity']}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 15,
+                                              color: isCompleted ? const Color(0xFF9A8570) : const Color(0xFFC4622A),
                                             ),
                                           ),
                                         ],
                                       ),
                                       if (item['notes'] != null && item['notes'].toString().isNotEmpty)
-                                        Text(
-                                          '📝 ${item['notes']}',
-                                          style: const TextStyle(
-                                            color: Colors.amberAccent,
-                                            fontSize: 12,
-                                            fontStyle: FontStyle.italic,
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 4),
+                                          child: Text(
+                                            'Catatan: ${item['notes']}',
+                                            style: const TextStyle(
+                                              color: Color(0xFF8B3E1C),
+                                              fontSize: 13,
+                                              fontStyle: FontStyle.italic,
+                                            ),
                                           ),
                                         ),
                                     ],
                                   ),
                                 )),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 8),
+                            const Divider(color: Color(0xFFE8E0D4), height: 1),
+                            const SizedBox(height: 16),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Total: Rp ${order['totalAmount']}',
-                                  style: const TextStyle(
-                                    color: Colors.orangeAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('Total Pembayaran', style: TextStyle(fontSize: 12, color: Color(0xFF9A8570))),
+                                    Text(
+                                      'Rp ${order['totalAmount']}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: isCompleted ? const Color(0xFF9A8570) : const Color(0xFF2D1A0A),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 if (!isCompleted)
-                                  ElevatedButton.icon(
+                                  ElevatedButton(
                                     onPressed: () => _handleComplete(order['id']),
-                                    icon: const Icon(Icons.check_circle, size: 18),
-                                    label: const Text('Selesai Diantar'),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.orange[700],
+                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                                     ),
+                                    child: const Text('Selesai Diantar'),
                                   )
                                 else
-                                  const Text(
-                                    '✔️ Selesai',
-                                    style: TextStyle(color: Colors.slate500),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFE8E0D4),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Row(
+                                      children: [
+                                        Icon(Icons.check, size: 16, color: Color(0xFF9A8570)),
+                                        SizedBox(width: 6),
+                                        Text('Selesai', style: TextStyle(color: Color(0xFF9A8570), fontWeight: FontWeight.w600)),
+                                      ],
+                                    ),
                                   ),
                               ],
                             ),

@@ -39,9 +39,9 @@ class _QrGeneratorScreenState extends State<QrGeneratorScreen> {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const Text(
+            Text(
               'Pilih Meja Warung',
-              style: TextStyle(color: Colors.slate300, fontSize: 16),
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
             const SizedBox(height: 12),
             Container(
@@ -96,7 +96,7 @@ class _QrGeneratorScreenState extends State<QrGeneratorScreen> {
                       _selectedTable,
                       style: const TextStyle(
                         fontSize: 28,
-                        fontWeight: FontWeight.extrabold,
+                        fontWeight: FontWeight.w800,
                         color: Colors.black,
                       ),
                     ),

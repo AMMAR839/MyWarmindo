@@ -51,6 +51,17 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
+    // Debug: log incoming request body
+    console.log('📥 Login attempt:', { body: req.body, contentType: req.headers['content-type'] });
+
+    // Guard: jika body kosong (biasanya karena CORS preflight gagal)
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Data login kosong. Pastikan mengirim username dan password.',
+      });
+    }
+
     const validatedData = loginSchema.parse(req.body);
 
     const user = await prisma.user.findUnique({

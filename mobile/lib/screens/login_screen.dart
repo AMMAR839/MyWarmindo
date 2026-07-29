@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
-  final VoidCallback onLoginSuccess;
+  final Function(Map<String, dynamic>) onLoginSuccess;
 
-  const LoginScreen({super.key, required onLoginSuccess})
-      : onLoginSuccess = onLoginSuccess;
+  const LoginScreen({super.key, required this.onLoginSuccess});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _usernameController = TextEditingController(text: 'kasir_ammar');
+  final _usernameController = TextEditingController(text: 'owner_ammar');
   final _passwordController = TextEditingController(text: 'password123');
   bool _isLoading = false;
   String? _errorMessage;
@@ -33,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (res['success'] == true) {
-      widget.onLoginSuccess();
+      widget.onLoginSuccess(res['data']);
     } else {
       setState(() {
         _errorMessage = res['message'] ?? 'Login gagal. Cek username/password.';
@@ -44,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -52,85 +50,80 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.2),
+                  color: const Color(0xFFF0EBE3), // Parchment
                   shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFFE8E0D4), width: 1),
                 ),
-                child: const Text('🍜', style: TextStyle(fontSize: 48)),
+                child: const Icon(Icons.storefront, size: 48, color: Color(0xFFC4622A)),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               const Text(
-                'Warmindo POS Mobile',
+                'Warmindo POS',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  letterSpacing: -0.5,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Portal Kasir & Owner Dapur',
-                style: TextStyle(fontSize: 14, color: Colors.slate400),
+                'Masuk ke portal kasir & dapur',
+                style: TextStyle(fontSize: 15, color: Color(0xFF9A8570)),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
               TextField(
                 controller: _usernameController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Username',
-                  labelStyle: const TextStyle(color: Colors.slate400),
-                  filled: true,
-                  fillColor: const Color(0xFF1E293B),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  prefixIcon: Icon(Icons.person_outline, color: Color(0xFF9A8570)),
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
-                  labelStyle: const TextStyle(color: Colors.slate400),
-                  filled: true,
-                  fillColor: const Color(0xFF1E293B),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF9A8570)),
                 ),
               ),
               if (_errorMessage != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _errorMessage!,
+                          style: TextStyle(color: Colors.red.shade700, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
-                height: 50,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[700],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
                   child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          'Masuk ke POS Dapur 🚀',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                      : const Text('Masuk Sekarang'),
                 ),
               ),
             ],

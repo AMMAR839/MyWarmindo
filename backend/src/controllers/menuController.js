@@ -1,5 +1,5 @@
 const { prisma } = require('../config/db');
-const { createMenuSchema, updateAvailabilitySchema } = require('../validations/menuValidation');
+const { createMenuSchema, updateMenuSchema, updateAvailabilitySchema } = require('../validations/menuValidation');
 
 const getMenusByStore = async (req, res, next) => {
   try {
@@ -34,6 +34,7 @@ const createMenu = async (req, res, next) => {
       data: {
         name: validatedData.name,
         price: validatedData.price,
+        category: validatedData.category,
         isAvailable: validatedData.isAvailable,
         storeId,
       },
@@ -42,6 +43,31 @@ const createMenu = async (req, res, next) => {
     res.status(201).json({
       success: true,
       message: 'Menu berhasil ditambahkan.',
+      data: menu,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateMenu = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const validatedData = updateMenuSchema.parse(req.body);
+
+    const menu = await prisma.menuItem.update({
+      where: { id },
+      data: {
+        name: validatedData.name,
+        price: validatedData.price,
+        category: validatedData.category,
+        isAvailable: validatedData.isAvailable,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Menu berhasil diperbarui.',
       data: menu,
     });
   } catch (error) {
@@ -71,8 +97,30 @@ const updateMenuAvailability = async (req, res, next) => {
   }
 };
 
+const deleteMenu = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Optional: Cek apakah menu sedang ada di transaksi aktif sebelum dihapus.
+    // Untuk saat ini kita hapus langsung saja.
+
+    await prisma.menuItem.delete({
+      where: { id },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Menu berhasil dihapus.',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getMenusByStore,
   createMenu,
+  updateMenu,
   updateMenuAvailability,
+  deleteMenu,
 };
